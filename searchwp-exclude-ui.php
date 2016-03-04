@@ -3,11 +3,11 @@
 Plugin Name: SearchWP Exclude UI
 Plugin URI: https://searchwp.com/
 Description: Add a checkbox to edit screens to add an "Exclude from search" checkbox
-Version: 1.0
+Version: 1.0.1
 Author: Jonathan Christopher
 Author URI: https://searchwp.com/
 
-Copyright 2015 Jonathan Christopher
+Copyright 2015-2016 Jonathan Christopher
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -29,7 +29,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 if ( ! defined( 'SEARCHWP_EXCLUDEUI_VERSION' ) ) {
-	define( 'SEARCHWP_EXCLUDEUI_VERSION', '1.0' );
+	define( 'SEARCHWP_EXCLUDEUI_VERSION', '1.0.1' );
 }
 
 /**
@@ -158,7 +158,10 @@ class SearchWPExcludeUI {
 			),
 		);
 
-		return get_posts( $args );
+		$ids = get_posts( $args );
+		$ids = array_map( 'absint', $ids );
+
+		return $ids;
 	}
 
 	function searchwp_exclude( $ids, $engine, $terms ) {
@@ -176,6 +179,7 @@ class SearchWPExcludeUI {
 		if ( ! empty( $excluded_by_ui ) ) {
 			$ids = array_merge( $ids, $excluded_by_ui );
 			$ids = array_unique( $ids );
+			$ids = array_map( 'absint', $ids );
 		}
 
 		return $ids;
